@@ -9,9 +9,10 @@
 #use i2c (MASTER,SDA=PIN_C4, SCL=PIN_C3,force_SW,fast=400000,stream=BME280_STREAM)
 
 #include <GPS_Lib.c>
-
+#include <INA219_lib.c>
 int t = 0,send_period = 2;
-
+float LOAD_VOLTAGE;
+float CURRENT;
 
 #task(rate=1s,max=1us)
    void BLINK_LED();
@@ -22,8 +23,6 @@ int t = 0,send_period = 2;
 void serial_isr() {
 GPSRead();
 }
-
-
 
 void inicializar();
 
@@ -47,10 +46,14 @@ void inicializar(){
    ANSELH = 0X00;
    RBPU =1;
    pc5 = 0;
+   INA219_init();
 }
 
 void GET_DATA(){
 
+
+LOAD_VOLTAGE = get_bus_voltage();
+CURRENT = get_current();
 
 }
 
@@ -85,6 +88,8 @@ void SEND_DATA(){
       fprintf(GS,"%c%c%c",rawLongitude[6],rawLongitude[7],rawLongitude[8]);
       fprintf(GS,"%c%c%c,",rawLongitude[9],rawLongitude[10],rawLongitude[11]);
       fprintf(GS,"%c%c,",rawSatellites[0],rawSatellites[1]);
+      fprintf(GS,"%.2f,",LOAD_VOLTAGE);
+      fprintf(GS,"%.2f",CURRENT);
       fprintf(GS,"\n\r");
       fprintf(GS,"#SAT,");
       fprintf(GS,"\n\r");
