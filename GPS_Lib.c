@@ -14,8 +14,8 @@
 
 int1 GPRMC_ok = 0, GPGGA_ok = 0;
 uint8_t char_number = 0, SentenceType = 0, Term;
-char sentence[6], rawTime[11], rawDate[7], rawSpeed[6], rawCourse[6], rawSatellites[3],
-     rawLatitude[13], rawLongitude[13], rawAltitude[7], buffer[12];
+char sentence[6], rawTime[6], rawSatellites[2],
+     rawLatitude[13], rawLongitude[13], buffer[12];
 
 void stringcpy(char *str1, char *str2, int1 dir = 0) {
   uint8_t chr = 0;
@@ -67,9 +67,9 @@ int1 GPSRead() {
       // Latitude N/S
       if((Term == 4) && (SentenceType == _GPRMC_)) {
         if(buffer[0] == 'N')
-          rawLatitude[0] = '0';
+          rawLatitude[0] = 'N';
         else
-          rawLatitude[0] = '-';
+          rawLatitude[0] = 'S';
       }
 
       // Longitude
@@ -79,35 +79,17 @@ int1 GPSRead() {
       // Longitude E/W
       if((Term == 6) && (SentenceType == _GPRMC_)) {
         if(buffer[0] == 'E')
-          rawLongitude[0] = '0';
+          rawLongitude[0] = 'E';
         else
-          rawLongitude[0] = '-';
-      }
-
-      // Speed
-      if((Term == 7) && (SentenceType == _GPRMC_)) {
-        stringcpy(buffer, rawSpeed);
-      }
-
-      // Course
-      if((Term == 8) && (SentenceType == _GPRMC_)) {
-        stringcpy(buffer, rawCourse);
-      }
-
-      // Date
-      if(Term == 9 && SentenceType == _GPRMC_) {
-        stringcpy(buffer, rawDate);
-      }
-
+          rawLongitude[0] = 'W';
+      }    
+      
       // Satellites
       if((Term == 7) && (SentenceType == _GPGGA_)) {
         stringcpy(buffer, rawSatellites);
       }
 
-      // Altitude
-      if((Term == 9) && (SentenceType == _GPGGA_)) {
-        stringcpy(buffer, rawAltitude);
-      }
+
       Term++;
       char_number = 0;
       break;
@@ -120,56 +102,6 @@ int1 GPSRead() {
   return 0;
 }
 
-uint8_t GPSSecond() {
-  return ((rawTime[4] - '0') * 10 + (rawTime[5] - '0'));
-}
-uint8_t GPSMinute() {
-  return ((rawTime[2] - '0') * 10 + (rawTime[3] - '0'));
-}
-uint8_t GPSHour() {
-  return ((rawTime[0] - '0') * 10 + (rawTime[1] - '0'));
-}
 
-uint8_t GPSDay() {
-  return ((rawDate[0] - '0') * 10 + (rawDate[1] - '0'));
-}
-uint8_t GPSMonth() {
-  return ((rawDate[2] - '0') * 10 + (rawDate[3] - '0'));
-}
-uint8_t GPSyear() {
-  return ((rawDate[4] - '0') * 10 + (rawDate[5] - '0'));
-}
-
-float parse_rawDegree(char *term_) {
-  float term_value = atof(term_)/100;
-  int16_t term_dec = term_value;
-  term_value -= term_dec;
-  term_value  = term_value * 5/3 + term_dec;
-  return term_value;
-}
-
-float Latitude() {
-  return parse_rawDegree(rawLatitude);
-}
-
-float Longitude() {
-  return parse_rawDegree(rawLongitude);
-}
-
-float Altitude() {
-  return atof(rawAltitude);
-}
-
-uint8_t Satellites() {
-  return atoi(rawSatellites);
-}
-
-float Speed() {
-  return (atof(rawSpeed) * 1.852);
-}
-
-float Course() {
-  return atof(rawCourse);
-}
 
 
