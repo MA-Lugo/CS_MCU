@@ -10,10 +10,11 @@
 
 #include <GPS_Lib.c>
 #include <INA219_lib.c>
+#include <DHT_lib.c>
 int t = 0,send_period = 2;
 float LOAD_VOLTAGE;
 float CURRENT;
-
+unsigned char dht_state = 0;
 #task(rate=1s,max=1us)
    void BLINK_LED();
 #task(rate=1s,max=100ms)
@@ -47,13 +48,14 @@ void inicializar(){
    RBPU =1;
    pc5 = 0;
    INA219_init();
+   dht_init();
 }
 
 void GET_DATA(){
-
-
 LOAD_VOLTAGE = get_bus_voltage();
 CURRENT = get_current();
+
+dht_state = get_dHT22();
 
 }
 
@@ -91,7 +93,19 @@ void SEND_DATA(){
       fprintf(GS,"%.2f,",LOAD_VOLTAGE);
       fprintf(GS,"%.2f",CURRENT);
       fprintf(GS,"\n\r");
+      
+      
       fprintf(GS,"#SAT,");
+      switch (dht_state) 
+      {     case 1:{}
+            case 2: {fprintf(GS,"Off,lin");break;}
+            case 3: {fprintf(GS,"Err,Err");break;} 
+            default:{  
+               fprintf(GS,"%2.1f,",dht22_Temp);
+               fprintf(GS,"%2.1f", dht22_Rh); 
+            }
+      }
+      fprintf(GS,",");
       fprintf(GS,"\n\r");
       t=0;
       CLEAR_DATA();
