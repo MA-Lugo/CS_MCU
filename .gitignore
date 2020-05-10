@@ -1,0 +1,11 @@
+__history
+*.STA
+*.ccspjt
+*.cof
+*.err
+*.esym
+*.lst
+*.sym
+*.tre
+*.xsym
+*.html
