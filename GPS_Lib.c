@@ -15,7 +15,7 @@
 int1 GPRMC_ok = 0, GPGGA_ok = 0;
 uint8_t char_number = 0, SentenceType = 0, Term;
 char sentence[6], rawTime[6], rawSatellites[2],
-     rawLatitude[13], rawLongitude[13], buffer[12];
+     rawLatitude[13], rawLongitude[13], buffer[13];
 
 void stringcpy(char *str1, char *str2, int1 dir = 0) {
   uint8_t chr = 0;
@@ -62,14 +62,15 @@ int1 GPSRead() {
 
       // Latitude
       if((Term == 3) && (SentenceType == _GPRMC_)) {
-        stringcpy(buffer, rawLatitude, 1);
+        stringcpy(buffer, rawLatitude, 2);
       }
       // Latitude N/S
       if((Term == 4) && (SentenceType == _GPRMC_)) {
-        if(buffer[0] == 'N')
-          rawLatitude[0] = 'N';
-        else
-          rawLatitude[0] = 'S';
+         if(buffer[0] == 'N'){
+            rawLatitude[1] = 'N';}
+         else
+            rawLatitude[1] = 'S';
+
       }
 
       // Longitude
@@ -78,10 +79,11 @@ int1 GPSRead() {
       }
       // Longitude E/W
       if((Term == 6) && (SentenceType == _GPRMC_)) {
-        if(buffer[0] == 'E')
-          rawLongitude[0] = 'E';
+        if(buffer[0] == 'E'){
+          rawLongitude[0] = 'E';}
         else
           rawLongitude[0] = 'W';
+
       }    
       
       // Satellites
