@@ -98,20 +98,22 @@ void SEND_DATA(){
    GET_DATA();
    if(t == send_period){
       fprintf(GS,"#CAN,");
-      fprintf(GS,"%c%c,",rawTime[0],rawTime[1]);
-      fprintf(GS,"%c%c,",rawTime[2],rawTime[3]);
-      fprintf(GS,"%c%c,",rawTime[4],rawTime[5]);
-      fprintf(GS,"%c%c",rawLatitude[1],rawLatitude[2]);
-      fprintf(GS,"%c%c%c",rawLatitude[3],rawLatitude[4],rawLatitude[5]);
-      fprintf(GS,"%c%c%c",rawLatitude[6],rawLatitude[7],rawLatitude[8]);
-      fprintf(GS,"%c%c%c,",rawLatitude[9],rawLatitude[10],rawLatitude[11]);
-      fprintf(GS,"%c%c%c",rawLongitude[0],rawLongitude[1],rawLongitude[2]);
-      fprintf(GS,"%c%c%c",rawLongitude[3],rawLongitude[4],rawLongitude[5]);
-      fprintf(GS,"%c%c%c",rawLongitude[6],rawLongitude[7],rawLongitude[8]);
-      fprintf(GS,"%c%c%c,",rawLongitude[9],rawLongitude[10],rawLongitude[11]);
-      fprintf(GS,"%c%c",rawSatellites[0],rawSatellites[1]);
-      fprintf(GS,"\n\r");
-      
+      if (rawLatitude[2] == 0) fprintf(GS,",,,,,\n\r");
+      else{
+         fprintf(GS,"%c%c,",rawTime[0],rawTime[1]);
+         fprintf(GS,"%c%c,",rawTime[2],rawTime[3]);
+         fprintf(GS,"%c%c,",rawTime[4],rawTime[5]);
+         fprintf(GS,"%c%c",rawLatitude[1],rawLatitude[2]);
+         fprintf(GS,"%c%c%c",rawLatitude[3],rawLatitude[4],rawLatitude[5]);
+         fprintf(GS,"%c%c%c",rawLatitude[6],rawLatitude[7],rawLatitude[8]);
+         fprintf(GS,"%c%c%c,",rawLatitude[9],rawLatitude[10],rawLatitude[11]);
+         fprintf(GS,"%c%c%c",rawLongitude[0],rawLongitude[1],rawLongitude[2]);
+         fprintf(GS,"%c%c%c",rawLongitude[3],rawLongitude[4],rawLongitude[5]);
+         fprintf(GS,"%c%c%c",rawLongitude[6],rawLongitude[7],rawLongitude[8]);
+         fprintf(GS,"%c%c%c,",rawLongitude[9],rawLongitude[10],rawLongitude[11]);
+         fprintf(GS,"%c%c",rawSatellites[0],rawSatellites[1]);
+         fprintf(GS,"\n\r");
+         }
       
       fprintf(GS,"#SAT,");
       switch (dht_state) 
