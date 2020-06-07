@@ -21,6 +21,7 @@ float CURRENT;
 unsigned char dht_state = 0;
 signed int32 raw_temperature;
 unsigned int32 raw_pressure;
+float rAltitude = 5.1;
 
 #task(rate=1s,max=1us)
    void BLINK_LED();
@@ -42,7 +43,7 @@ void main(){
    
    inicializar();
    delay_ms(5000);
-   pc5 = 1;
+   pb5 = 1;
    RTOS_RUN();
 }
 
@@ -50,7 +51,7 @@ void inicializar(){
    enable_interrupts(INT_RDA);
    enable_interrupts(GLOBAL);
    TRISA=0xFF;
-   TRISB=0xFF;
+   TRISB=0xDF;
    TRISC=0x9E;
    TRISD=0xFF;
    TRISE=0xFF;
@@ -59,7 +60,7 @@ void inicializar(){
    setup_adc_ports(sAN5,VSS_VDD);
    setup_adc(ADC_CLOCK_INTERNAL);//Configurando el convertidor ADC con reloj
    RBPU =1;
-   pc5 = 0;
+   pb5 = 0;
    INA219_init();
    dht_init();
    BME280_begin(MODE_NORMAL);
@@ -97,7 +98,7 @@ void SEND_DATA(){
       fprintf(GS,"%c%c,",rawTime[0],rawTime[1]);
       fprintf(GS,"%c%c,",rawTime[2],rawTime[3]);
       fprintf(GS,"%c%c,",rawTime[4],rawTime[5]);
-      fprintf(GS,"%c%c%c",rawLatitude[0],rawLatitude[1],rawLatitude[2]);
+      fprintf(GS,"%c%c",rawLatitude[1],rawLatitude[2]);
       fprintf(GS,"%c%c%c",rawLatitude[3],rawLatitude[4],rawLatitude[5]);
       fprintf(GS,"%c%c%c",rawLatitude[6],rawLatitude[7],rawLatitude[8]);
       fprintf(GS,"%c%c%c,",rawLatitude[9],rawLatitude[10],rawLatitude[11]);
@@ -122,6 +123,7 @@ void SEND_DATA(){
       fprintf(GS,",");
       fprintf(GS,"%02Lu.%02Lu,",raw_temperature/100,raw_temperature%100);
       fprintf(GS,"%04Lu.%02Lu,",raw_pressure/100,raw_pressure%100);
+      fprintf(GS,"%.1f,",rAltitude);
       fprintf(GS,"%.2f,",VOLTAGE);
       fprintf(GS,"%.2f",CURRENT);
       fprintf(GS,"\n\r");
@@ -142,6 +144,6 @@ void GET_BME_T(){
 
 }
 void BLINK_LED(){
-   output_toggle(PIN_C5);
+   output_toggle(PIN_B5);
 }
 
