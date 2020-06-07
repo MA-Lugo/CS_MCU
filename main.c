@@ -15,13 +15,16 @@
 #include <BME280_Lib.c>
 
 int t = 0,send_period = 2;
+int p1 = 0;
+float press1;
+float PRESSURE;
 int16 adc;
 float VOLTAGE;
 float CURRENT;
 unsigned char dht_state = 0;
 signed int32 raw_temperature;
 unsigned int32 raw_pressure;
-float rAltitude = 5.1;
+
 
 #task(rate=1s,max=1us)
    void BLINK_LED();
@@ -122,8 +125,8 @@ void SEND_DATA(){
       }
       fprintf(GS,",");
       fprintf(GS,"%02Lu.%02Lu,",raw_temperature/100,raw_temperature%100);
-      fprintf(GS,"%04Lu.%02Lu,",raw_pressure/100,raw_pressure%100);
-      fprintf(GS,"%.1f,",rAltitude);
+      fprintf(GS,"%3.2f,",PRESSURE);
+      fprintf(GS,"%3.2f,",press1 - PRESSURE);
       fprintf(GS,"%.2f,",VOLTAGE);
       fprintf(GS,"%.2f",CURRENT);
       fprintf(GS,"\n\r");
@@ -134,9 +137,14 @@ void SEND_DATA(){
 }
 
 void GET_BME_P(){
-
+   
    BME280_readPressure(&raw_pressure);
-   //bme_pressure = raw_pressure/100;
+   PRESSURE = raw_pressure/100 + ((raw_pressure%100)*.01);
+   if (p1 <= 3) {
+   press1 = PRESSURE;
+   }
+   p1++;
+   if (p1 >= 3)p1 = 4;
 }
 void GET_BME_T(){
    BME280_readTemperature(&raw_temperature); 
