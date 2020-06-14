@@ -1,13 +1,13 @@
-//////Driver modified by M.Lugo
+//////Driver modified
 #define DHT11_pin PIN_E2 
 
 unsigned char values[5];
 /* For DHT11:
- *	values[0] = Integer RH
- * 	values[1] = Decimal RH = 0
- * 	values[2] = Integer Temp
- * 	values[3] = Decimal Temp
- * 	values[4] = Check Sum
+ *   values[0] = Integer RH
+ *    values[1] = Decimal RH = 0
+ *    values[2] = Integer Temp
+ *    values[3] = Decimal Temp
+ *    values[4] = Check Sum
  */ 
 
 void DHT_init(); 
@@ -101,31 +101,31 @@ z = get_dht11();
       { 
             case 1: 
             {
-	       return 1;
+               return 1;
             } 
             case 2: 
             { 
-               return 2;	//No sensor
-	       
+               return 2;   //No sensor
+          
                break; 
             } 
             case 3: 
             { 
 
-               return 3;	// Check sum error
+               return 3;   // Check sum error
                break; 
             } 
             default: 
-	    {
-	       dht22_Rh = make16(values[0],values[1]);
-	       dht22_Rh = dht22_Rh/10;
-	       
-	       dht22_Temp = Make16 (values [2] & 0x7F, values [3]);
-	       if (values[2] & 0x80)  dht22_Temp = dht22_Temp *-1;
-	       dht22_Temp = dht22_Temp / 10;
-	       
-	       return 0; 
-	       
-	    }
+       {
+          dht22_Rh = make16(values[0],values[1]);
+          dht22_Rh = dht22_Rh/10;
+          
+          dht22_Temp = Make16 (values [2] & 0x7F, values [3]);
+          if (values[2] & 0x80)  dht22_Temp = dht22_Temp *-1;
+          dht22_Temp = dht22_Temp / 10;
+          
+          return 0; 
+          
+       }
       }
 }

@@ -1,8 +1,5 @@
 // GPS Library for CCS PIC C compiler
 // http://simple-circuit.com/
-
-
-
 #define _GPRMC_  1
 #define _GPGGA_  2
 #define _OTHER_  3
@@ -10,7 +7,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-
 
 int1 GPRMC_ok = 0, GPGGA_ok = 0;
 uint8_t char_number = 0, SentenceType = 0, Term;
@@ -75,14 +71,14 @@ int1 GPSRead() {
 
       // Longitude
       if((Term == 5) && (SentenceType == _GPRMC_)) {
-        stringcpy(buffer, rawLongitude, 1);
+        stringcpy(buffer, rawLongitude, 2);
       }
       // Longitude E/W
       if((Term == 6) && (SentenceType == _GPRMC_)) {
         if(buffer[0] == 'E'){
-          rawLongitude[0] = 'E';}
+          rawLongitude[1] = 'E';}
         else
-          rawLongitude[0] = 'W';
+          rawLongitude[1] = 'W';
 
       }    
       
